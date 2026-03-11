@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marvin Banda — Tax Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a; --navy-mid: #152336; --navy-light: #1e3250;
+    --gold: #c9a84c; --gold-light: #e2c47a; --gold-pale: #f5e9c8;
+    --cream: #faf7f0; --text-dim: rgba(250,247,240,0.5); --text-mid: rgba(250,247,240,0.75);
+    --rule: rgba(201,168,76,0.2); --green: #2e7d52;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--navy); color:var(--cream); font-family:'Montserrat',sans-serif; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:1; opacity:0.4; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; justify-content:space-between; align-items:center; padding:24px 64px; border-bottom:1px solid rgba(201,168,76,0.1); backdrop-filter:blur(12px); background:rgba(13,27,42,0.9); }
+  .nav-logo { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:600; letter-spacing:4px; color:var(--gold); text-decoration:none; }
+  .nav-links { display:flex; gap:40px; list-style:none; align-items:center; }
+  .nav-links a { font-size:10px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--cream); text-decoration:none; opacity:0.5; transition:all 0.2s; }
+  .nav-links a:hover { opacity:1; color:var(--gold); }
+  .nav-avail { display:flex; align-items:center; gap:8px; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#4caf7d; }
+  .nav-avail-dot { width:7px; height:7px; background:#4caf7d; border-radius:50%; animation:pulse 2s infinite; }
+  .nav-cv-btn { padding:10px 22px; border:1px solid var(--gold); color:var(--gold)!important; opacity:1!important; display:flex; align-items:center; gap:8px; text-decoration:none; font-size:10px; font-weight:500; letter-spacing:2px; text-transform:uppercase; transition:all 0.3s!important; }
+  .nav-cv-btn:hover { background:var(--gold)!important; color:var(--navy)!important; }
+  .nav-cv-btn svg { width:12px; height:12px; }
+
+  /* AVAILABILITY BANNER */
+  .avail-banner { background:linear-gradient(90deg, #1a3a28, #0d2b1e); padding:12px 64px; display:flex; align-items:center; justify-content:center; gap:12px; border-bottom:1px solid rgba(76,175,125,0.2); position:relative; z-index:2; margin-top:80px; }
+  .avail-dot { width:8px; height:8px; background:#4caf7d; border-radius:50%; animation:pulse 2s infinite; flex-shrink:0; }
+  .avail-text { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#4caf7d; }
+  .avail-sub { font-size:11px; color:rgba(76,175,125,0.6); letter-spacing:1px; }
+
+  /* HERO */
+  .hero { min-height:calc(100vh - 80px); display:grid; grid-template-columns:1fr 1fr; position:relative; overflow:hidden; }
+  .hero-left { display:flex; flex-direction:column; justify-content:center; padding:80px 64px; position:relative; z-index:2; }
+  .hero-right { position:relative; overflow:hidden; background:var(--navy-mid); display:flex; flex-direction:column; }
+  .hero-right-pattern { position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(201,168,76,0.03) 40px,rgba(201,168,76,0.03) 41px),repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(201,168,76,0.03) 40px,rgba(201,168,76,0.03) 41px); }
+
+  /* Headshot area */
+  .hero-headshot-wrap { position:relative; z-index:2; display:flex; justify-content:center; align-items:center; flex:1; padding:48px; }
+  .hero-headshot-ring { width:280px; height:280px; border-radius:50%; border:2px solid var(--rule); display:flex; align-items:center; justify-content:center; position:relative; }
+  .hero-headshot-ring::before { content:''; position:absolute; inset:-8px; border-radius:50%; border:1px solid rgba(201,168,76,0.1); }
+  .hero-headshot { width:260px; height:260px; border-radius:50%; background:var(--navy-light); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; overflow:hidden; }
+  .headshot-icon { opacity:0.25; }
+  .headshot-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.5; }
+  .hero-headshot img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:none; }
+  .hero-headshot-ring .upload-note { position:absolute; bottom:-36px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); opacity:0.4; }
+
+  .hero-right-bottom { position:relative; z-index:2; padding:0 48px 48px; border-top:1px solid var(--rule); }
+  .hero-right-bottom-inner { padding-top:28px; display:flex; justify-content:space-between; align-items:center; }
+  .hero-cert-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.7; margin-bottom:4px; }
+  .hero-cert-val { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--cream); }
+
+  .hero-rule { display:flex; align-items:center; gap:16px; margin-bottom:28px; opacity:0; animation:fadeUp 0.8s 0.2s forwards; }
+  .hero-rule-line { flex:1; max-width:60px; height:1px; background:var(--gold); }
+  .hero-rule-text { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); }
+  .hero-name { font-family:'Cormorant Garamond',serif; font-size:clamp(52px,6vw,88px); font-weight:600; line-height:1.0; color:var(--cream); letter-spacing:1px; margin-bottom:8px; opacity:0; animation:fadeUp 0.8s 0.35s forwards; }
+  .hero-name em { font-style:italic; color:var(--gold); }
+  .hero-title { font-size:11px; letter-spacing:5px; text-transform:uppercase; color:var(--gold-light); font-weight:400; margin-bottom:32px; opacity:0; animation:fadeUp 0.8s 0.5s forwards; }
+  .hero-desc { font-size:14px; line-height:1.9; color:var(--text-mid); max-width:420px; margin-bottom:40px; font-weight:300; opacity:0; animation:fadeUp 0.8s 0.65s forwards; }
+  .hero-btns { display:flex; gap:16px; flex-wrap:wrap; opacity:0; animation:fadeUp 0.8s 0.8s forwards; }
+  .btn-primary { padding:15px 32px; background:var(--gold); color:var(--navy); font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; text-decoration:none; transition:all 0.3s; display:flex; align-items:center; gap:10px; }
+  .btn-primary:hover { background:var(--gold-light); transform:translateY(-2px); }
+  .btn-secondary { padding:15px 32px; border:1px solid rgba(201,168,76,0.4); color:var(--gold); font-size:10px; font-weight:500; letter-spacing:3px; text-transform:uppercase; text-decoration:none; transition:all 0.3s; display:flex; align-items:center; gap:10px; }
+  .btn-secondary:hover { border-color:var(--gold); background:rgba(201,168,76,0.08); transform:translateY(-2px); }
+  .btn-primary svg, .btn-secondary svg { width:13px; height:13px; }
+
+  .gold-divider { height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:0.3; }
+
+  /* CREDENTIALS BAR */
+  .credentials { background:var(--navy-mid); padding:28px 64px; display:flex; gap:0; border-bottom:1px solid var(--rule); }
+  .cred-item { flex:1; padding:0 36px; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:4px; }
+  .cred-item:first-child { padding-left:0; }
+  .cred-item:last-child { border-right:none; }
+  .cred-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.7; }
+  .cred-value { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:var(--cream); }
+
+  /* EMPLOYER LOGOS */
+  .logos-section { padding:40px 64px; background:var(--navy-mid); border-bottom:1px solid var(--rule); }
+  .logos-label { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--text-dim); text-align:center; margin-bottom:28px; }
+  .logos-strip { display:flex; justify-content:center; align-items:center; gap:0; flex-wrap:wrap; }
+  .logo-pill { padding:14px 32px; border-right:1px solid var(--rule); display:flex; align-items:center; justify-content:center; transition:all 0.3s; }
+  .logo-pill:last-child { border-right:none; }
+  .logo-pill:hover { background:rgba(201,168,76,0.05); }
+  .logo-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; transition:color 0.3s; }
+  .logo-pill:hover .logo-name { color:var(--gold); }
+
+  /* SECTION COMMON */
+  .section-eyebrow { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; display:flex; align-items:center; gap:12px; }
+  .section-eyebrow::after { content:''; flex:1; max-width:40px; height:1px; background:var(--gold); opacity:0.4; }
+  .section-heading { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,4vw,58px); font-weight:600; line-height:1.1; color:var(--cream); }
+  .section-heading em { font-style:italic; color:var(--gold); }
+
+  /* WHY HIRE ME */
+  .why-section { padding:100px 64px; background:var(--navy); }
+  .why-grid { display:grid; grid-template-columns:1fr 2fr; gap:96px; align-items:start; }
+  .why-left { position:sticky; top:120px; }
+  .why-cards { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+  .why-card { background:var(--navy-mid); padding:36px 32px; border-top:2px solid transparent; transition:all 0.3s; }
+  .why-card:hover { border-top-color:var(--gold); background:var(--navy-light); }
+  .why-num { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:var(--rule); line-height:1; margin-bottom:16px; }
+  .why-title { font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--cream); margin-bottom:12px; }
+  .why-body { font-size:13px; line-height:1.8; color:var(--text-dim); font-weight:300; }
+  .why-body strong { color:var(--gold); font-weight:600; }
+
+  /* ABOUT */
+  .about { padding:100px 64px; display:grid; grid-template-columns:1fr 2fr; gap:96px; }
+  .about-left-sticky { position:sticky; top:120px; height:fit-content; }
+  .about-body { font-size:15px; line-height:1.9; color:var(--text-mid); font-weight:300; margin-bottom:48px; }
+  .about-body strong { color:var(--cream); font-weight:500; }
+  .expertise-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:48px; }
+  .expertise-item { padding:18px 22px; border:1px solid var(--rule); font-size:12px; font-weight:400; letter-spacing:1px; color:var(--text-mid); transition:all 0.3s; display:flex; align-items:center; gap:10px; }
+  .expertise-item::before { content:'◆'; font-size:6px; color:var(--gold); flex-shrink:0; }
+  .expertise-item:hover { border-color:var(--gold); color:var(--cream); background:rgba(201,168,76,0.04); }
+  .stats-row { display:flex; gap:48px; padding-top:40px; border-top:1px solid var(--rule); }
+  .stat-number { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:600; color:var(--gold); line-height:1; }
+  .stat-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-top:4px; }
+
+  /* CERTIFICATIONS */
+  .certs-section { padding:0 64px 100px; }
+  .certs-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
+  .cert-card { background:var(--navy-mid); padding:36px 28px; position:relative; overflow:hidden; transition:all 0.3s; opacity:0; transform:translateY(20px); transition:opacity 0.6s,transform 0.6s,background 0.3s; }
+  .cert-card.visible { opacity:1; transform:translateY(0); }
+  .cert-card:hover { background:var(--navy-light); }
+  .cert-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--gold); transform:scaleY(0); transform-origin:bottom; transition:transform 0.4s cubic-bezier(0.23,1,0.32,1); }
+  .cert-card:hover::before { transform:scaleY(1); }
+  .cert-icon { font-size:28px; margin-bottom:16px; }
+  .cert-name { font-size:13px; font-weight:600; color:var(--cream); margin-bottom:6px; letter-spacing:0.5px; }
+  .cert-org { font-size:11px; color:var(--gold); opacity:0.8; margin-bottom:8px; letter-spacing:1px; }
+  .cert-year { font-size:10px; color:var(--text-dim); letter-spacing:2px; }
+
+  /* EXPERIENCE */
+  .experience { padding:0 64px 100px; }
+  .exp-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:56px; padding-bottom:24px; border-bottom:1px solid var(--rule); }
+  .exp-count { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.7; }
+  .exp-item { display:grid; grid-template-columns:220px 1fr; padding:44px 0; border-bottom:1px solid var(--rule); gap:56px; opacity:0; transform:translateY(20px); transition:opacity 0.7s,transform 0.7s; }
+  .exp-item.visible { opacity:1; transform:translateY(0); }
+  .exp-period { font-size:10px; letter-spacing:2px; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
+  .exp-company { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--cream); margin-bottom:4px; }
+  .exp-location { font-size:11px; letter-spacing:1px; color:var(--text-dim); }
+  .exp-role { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; color:var(--cream); margin-bottom:14px; line-height:1.1; }
+  .exp-desc { font-size:13px; line-height:1.9; color:var(--text-mid); font-weight:300; max-width:560px; }
+
+  /* ACHIEVEMENTS */
+  .achievements-section { padding:0 64px 100px; }
+  .achieve-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+  .achieve-card { background:var(--navy-mid); padding:44px 36px; position:relative; overflow:hidden; opacity:0; transform:translateY(20px); transition:opacity 0.7s,transform 0.7s,background 0.3s; }
+  .achieve-card.visible { opacity:1; transform:translateY(0); }
+  .achieve-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),transparent); }
+  .achieve-card:hover { background:var(--navy-light); }
+  .achieve-card-num { font-family:'Cormorant Garamond',serif; font-size:60px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:14px; }
+  .achieve-card-title { font-size:11px; font-weight:600; letter-spacing:1px; color:var(--cream); margin-bottom:10px; text-transform:uppercase; }
+  .achieve-card-body { font-size:13px; line-height:1.8; color:var(--text-dim); font-weight:300; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding:0 64px 100px; }
+  .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+  .testimonial-card { background:var(--navy-mid); padding:48px 40px; position:relative; opacity:0; transform:translateY(20px); transition:opacity 0.7s,transform 0.7s; }
+  .testimonial-card.visible { opacity:1; transform:translateY(0); }
+  .testimonial-card::before { content:'\201C'; font-family:'Cormorant Garamond',serif; font-size:120px; font-weight:700; color:var(--gold); opacity:0.12; position:absolute; top:-10px; left:28px; line-height:1; }
+  .testimonial-quote { font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; line-height:1.7; color:var(--text-mid); margin-bottom:32px; position:relative; z-index:1; }
+  .testimonial-rule { width:32px; height:1px; background:var(--gold); margin-bottom:20px; }
+  .testimonial-name { font-size:12px; font-weight:600; letter-spacing:1px; color:var(--cream); margin-bottom:4px; }
+  .testimonial-role { font-size:11px; color:var(--gold); opacity:0.7; letter-spacing:1px; }
+  .testimonial-note { font-size:10px; color:var(--text-dim); margin-top:24px; letter-spacing:1px; font-style:italic; opacity:0.6; }
+
+  /* CONTACT */
+  .contact-section { padding:100px 64px; background:var(--navy-mid); position:relative; overflow:hidden; }
+  .contact-section::before { content:'CONTACT'; position:absolute; right:20px; bottom:-60px; font-family:'Cormorant Garamond',serif; font-size:240px; font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(201,168,76,0.04); user-select:none; pointer-events:none; }
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; position:relative; z-index:2; }
+  .contact-heading { font-family:'Cormorant Garamond',serif; font-size:clamp(40px,5vw,68px); font-weight:600; line-height:1.05; color:var(--cream); margin-bottom:20px; }
+  .contact-heading em { font-style:italic; color:var(--gold); }
+  .contact-sub { font-size:14px; line-height:1.8; color:var(--text-mid); font-weight:300; margin-bottom:40px; }
+
+  /* Contact form */
+  .contact-form { display:flex; flex-direction:column; gap:12px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  .form-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.8; }
+  .form-input, .form-textarea {
+    background:var(--navy); border:1px solid var(--rule); color:var(--cream);
+    padding:14px 18px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:300;
+    outline:none; transition:border-color 0.2s; width:100%; resize:none;
+  }
+  .form-input:focus, .form-textarea:focus { border-color:var(--gold); }
+  .form-input::placeholder, .form-textarea::placeholder { color:var(--text-dim); font-size:12px; }
+  .form-textarea { height:100px; }
+  .form-submit { padding:16px 40px; background:var(--gold); color:var(--navy); font-family:'Montserrat',sans-serif; font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; border:none; cursor:pointer; transition:all 0.3s; align-self:flex-start; display:flex; align-items:center; gap:10px; }
+  .form-submit:hover { background:var(--gold-light); transform:translateY(-2px); }
+  .form-success { display:none; padding:16px 24px; background:rgba(46,125,82,0.15); border:1px solid rgba(46,125,82,0.4); color:#4caf7d; font-size:12px; letter-spacing:1px; }
+
+  /* Direct links */
+  .contact-links { display:flex; flex-direction:column; gap:2px; }
+  .cli { display:flex; align-items:center; justify-content:space-between; padding:22px 28px; background:var(--navy); text-decoration:none; color:var(--cream); border-left:3px solid transparent; transition:all 0.25s; }
+  .cli:hover { background:var(--navy-light); border-left-color:var(--gold); }
+  .cli-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.7; display:block; margin-bottom:4px; }
+  .cli-value { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; color:var(--cream); }
+  .cli-arrow { color:var(--gold); font-size:18px; opacity:0; transition:all 0.25s; transform:translateX(-6px); }
+  .cli:hover .cli-arrow { opacity:1; transform:translateX(0); }
+
+  footer { background:var(--navy); padding:28px 64px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--rule); }
+  footer p { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); }
+  .footer-badge { display:flex; align-items:center; gap:8px; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); opacity:0.65; }
+  .footer-badge::before { content:''; width:6px; height:6px; background:var(--gold); border-radius:50%; animation:pulse 2s infinite; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+
+  @media (max-width:960px) {
+    nav { padding:18px 24px; }
+    .nav-links { display:none; }
+    .avail-banner { padding:12px 24px; }
+    .hero { grid-template-columns:1fr; }
+    .hero-left { padding:60px 24px; }
+    .hero-right { display:none; }
+    .credentials { padding:24px; flex-wrap:wrap; gap:20px; }
+    .cred-item { border-right:none; border-bottom:1px solid var(--rule); padding:0 0 16px; }
+    .cred-item:last-child { border-bottom:none; }
+    .logos-section { padding:32px 24px; }
+    .logos-strip { flex-direction:column; gap:0; }
+    .logo-pill { border-right:none; border-bottom:1px solid var(--rule); width:100%; justify-content:center; }
+    .why-section,.about { padding:60px 24px; grid-template-columns:1fr; gap:40px; }
+    .why-left,.about-left-sticky { position:static; }
+    .why-cards { grid-template-columns:1fr; }
+    .expertise-grid { grid-template-columns:1fr; }
+    .certs-section,.experience,.achievements-section,.testimonials { padding:0 24px 60px; }
+    .certs-grid { grid-template-columns:1fr 1fr; }
+    .achieve-cards,.testimonials-grid { grid-template-columns:1fr; }
+    .exp-item { grid-template-columns:1fr; gap:16px; }
+    .contact-section { padding:60px 24px; }
+    .contact-grid { grid-template-columns:1fr; gap:40px; }
+    .form-row { grid-template-columns:1fr; }
+    footer { padding:24px; flex-direction:column; gap:12px; text-align:center; }
+    .stats-row { flex-wrap:wrap; gap:24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">MB</a>
+  <ul class="nav-links">
+    <li><a href="#why">Why Hire Me</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><div class="nav-avail"><div class="nav-avail-dot"></div>Open to Opportunities</div></li>
+    <li>
+      <a href="Marvin_Banda_CV.pdf" download="Marvin_Banda_CV.pdf" class="nav-cv-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CV
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- AVAILABILITY BANNER -->
+<div class="avail-banner">
+  <div class="avail-dot"></div>
+  <span class="avail-text">Currently Available</span>
+  <span class="avail-sub">— Open to senior tax roles, consultancy & strategic advisory in Zambia and beyond</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-rule">
+      <div class="hero-rule-line"></div>
+      <span class="hero-rule-text">Tax Manager · Lusaka, Zambia</span>
+    </div>
+    <h1 class="hero-name">Marvin<br><em>Banda</em></h1>
+    <div class="hero-title">ZICA Certified · MBA Finance (Ongoing)</div>
+    <p class="hero-desc">Seasoned Tax Professional with 10+ years of experience in tax management, audit, and compliance. Trusted by multinationals including Zambian Breweries, FQM Trident, and Dangote Cement.</p>
+    <div class="hero-btns">
+      <a href="Marvin_Banda_CV.pdf" download="Marvin_Banda_CV.pdf" class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CV
+      </a>
+      <a href="#contact" class="btn-secondary">Get In Touch →</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-right-pattern"></div>
+    <div class="hero-headshot-wrap">
+      <div class="hero-headshot-ring">
+        <div class="hero-headshot">
+          <!-- Replace this block with: <img src="your-photo.jpg" alt="Marvin Banda"> -->
+          <svg class="headshot-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="headshot-label">Add Your Photo</span>
+        </div>
+        <span class="upload-note">Replace with headshot.jpg</span>
+      </div>
+    </div>
+    <div class="hero-right-bottom">
+      <div class="hero-right-bottom-inner">
+        <div>
+          <div class="hero-cert-label">ZICA Certified Professional</div>
+          <div class="hero-cert-val">Membership No. A010307</div>
+        </div>
+        <div>
+          <div class="hero-cert-label">Education</div>
+          <div class="hero-cert-val">MBA Finance — ZCAS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDENTIALS BAR -->
+<div class="credentials">
+  <div class="cred-item">
+    <span class="cred-label">Current Employer</span>
+    <span class="cred-value">Zambian Breweries</span>
+  </div>
+  <div class="cred-item">
+    <span class="cred-label">Certification</span>
+    <span class="cred-value">ZICA Professional</span>
+  </div>
+  <div class="cred-item">
+    <span class="cred-label">Membership</span>
+    <span class="cred-value">No. A010307</span>
+  </div>
+  <div class="cred-item">
+    <span class="cred-label">Experience</span>
+    <span class="cred-value">10+ Years</span>
+  </div>
+  <div class="cred-item">
+    <span class="cred-label">Status</span>
+    <span class="cred-value" style="color:#4caf7d;">● Available</span>
+  </div>
+</div>
+
+<!-- EMPLOYER LOGOS -->
+<div class="logos-section">
+  <div class="logos-label">Trusted By</div>
+  <div class="logos-strip">
+    <div class="logo-pill"><span class="logo-name">Zambian Breweries</span></div>
+    <div class="logo-pill"><span class="logo-name">FQM Trident</span></div>
+    <div class="logo-pill"><span class="logo-name">Dangote Cement</span></div>
+    <div class="logo-pill"><span class="logo-name">Zambia Revenue Authority</span></div>
+    <div class="logo-pill"><span class="logo-name">Zanaco</span></div>
+  </div>
+</div>
+
+<div class="gold-divider"></div>
+
+<!-- WHY HIRE ME -->
+<section class="why-section" id="why">
+  <div class="why-grid">
+    <div class="why-left">
+      <div class="section-eyebrow">Value Proposition</div>
+      <h2 class="section-heading">Why<br>Hire <em>Me.</em></h2>
+    </div>
+    <div class="why-cards">
+      <div class="why-card">
+        <div class="why-num">01</div>
+        <div class="why-title">Proven Negotiator</div>
+        <p class="why-body">I have a documented track record of protecting company value — including a <strong>100% WHT reduction</strong> (K9M) and a <strong>95% customs reduction</strong> (USD 19M). I don't just file returns; I fight for outcomes.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">02</div>
+        <div class="why-title">Both Sides of the Table</div>
+        <p class="why-body">Having worked inside <strong>ZRA as an auditor</strong> and in the private sector as a tax manager, I understand exactly how the revenue authority thinks — giving employers a strategic edge in every audit.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">03</div>
+        <div class="why-title">Multinational Experience</div>
+        <p class="why-body">Hands-on experience with <strong>transfer pricing, OECD standards, double tax treaties,</strong> and cross-border tax at companies like FQM Trident and Dangote Cement — uncommon expertise in Zambia.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">04</div>
+        <div class="why-title">Tech-Enabled Compliance</div>
+        <p class="why-body">Proficient in <strong>SAP, Asycuda World, ZRA Tax Online,</strong> and QuickBooks. I build dashboards and automated tools that reduce leakage and give finance teams real-time visibility over tax obligations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-left-sticky">
+    <div class="section-eyebrow">Profile</div>
+    <h2 class="section-heading">About<br><em>Me.</em></h2>
+  </div>
+  <div>
+    <p class="about-body">
+      I am a <strong>ZICA-certified Tax Manager</strong> currently leading tax at Zambian Breweries, with a decade-long track record across public and private sectors. My career spans <strong>FQM Trident, Dangote Cement Zambia,</strong> and the <strong>Zambia Revenue Authority</strong> — giving me a uniquely rounded view on tax compliance, planning, and audit from both sides.
+      <br><br>
+      I specialise in corporate tax, transfer pricing, customs compliance, VAT, and excise duty — with a proven ability to protect company value through negotiation, planning, and rigorous audit management. Currently deepening my academic grounding through an <strong>MBA in Finance at ZCAS University.</strong>
+    </p>
+    <div class="expertise-grid">
+      <div class="expertise-item">Corporate Tax & IFRS</div>
+      <div class="expertise-item">Transfer Pricing (OECD)</div>
+      <div class="expertise-item">VAT & Excise Duty</div>
+      <div class="expertise-item">Customs & Import Duties</div>
+      <div class="expertise-item">ZRA Audit Management</div>
+      <div class="expertise-item">SAP & Asycuda World</div>
+      <div class="expertise-item">Tax Planning & Strategy</div>
+      <div class="expertise-item">Risk & Internal Controls</div>
+    </div>
+    <div class="stats-row">
+      <div><div class="stat-number">10+</div><div class="stat-label">Years Experience</div></div>
+      <div><div class="stat-number">4</div><div class="stat-label">Industry Awards</div></div>
+      <div><div class="stat-number">6</div><div class="stat-label">Employers</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section class="certs-section" id="certs">
+  <div style="padding-top:80px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--rule);">
+      <div>
+        <div class="section-eyebrow">Qualifications</div>
+        <h2 class="section-heading">Certifications &<br><em>Education</em></h2>
+      </div>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card">
+        <div class="cert-icon">🎓</div>
+        <div class="cert-name">MBA Finance</div>
+        <div class="cert-org">ZCAS University</div>
+        <div class="cert-year">2025 — Ongoing</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">📜</div>
+        <div class="cert-name">ZICA Professional</div>
+        <div class="cert-org">Zambia Institute of Chartered Accountants</div>
+        <div class="cert-year">2016</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">📋</div>
+        <div class="cert-name">Diploma in Taxation</div>
+        <div class="cert-org">Zambia Institute of Chartered Accountants</div>
+        <div class="cert-year">2018</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">🌍</div>
+        <div class="cert-name">Transfer Pricing — eLearning</div>
+        <div class="cert-org">World Bank Group</div>
+        <div class="cert-year">2024</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">⚖️</div>
+        <div class="cert-name">Introduction to Transfer Pricing</div>
+        <div class="cert-org">OECD</div>
+        <div class="cert-year">2024</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">🖥️</div>
+        <div class="cert-name">Information Technology</div>
+        <div class="cert-org">Short Course</div>
+        <div class="cert-year">—</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">📦</div>
+        <div class="cert-name">ZRA Customs Course</div>
+        <div class="cert-org">Zambia Revenue Authority</div>
+        <div class="cert-year">—</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">💼</div>
+        <div class="cert-name">ZRA PAYE Course</div>
+        <div class="cert-org">Zambia Revenue Authority</div>
+        <div class="cert-year">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div style="padding-top:80px;">
+    <div class="exp-header">
+      <div><div class="section-eyebrow">Career History</div><h2 class="section-heading">Experience</h2></div>
+      <span class="exp-count">06 Roles</span>
+    </div>
+    <div class="exp-item">
+      <div class="exp-left">
+        <div class="exp-period">01/2025 — Present</div>
+        <div class="exp-company">Zambian Breweries</div>
+        <div class="exp-location">Lusaka, Zambia</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Tax Manager</div>
+        <p class="exp-desc">Filing all statutory tax returns (VAT, Corporate Tax, WHT, PAYE, Excise Duty, NAPSA, NHIMA). Leading ZRA tax audits, defending tax positions, and overseeing customs duty compliance and transfer pricing per OECD standards. Mentoring tax staff and running cross-departmental training sessions.</p>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-left">
+        <div class="exp-period">05/2023 — 12/2024</div>
+        <div class="exp-company">FQM Trident Ltd</div>
+        <div class="exp-location">Kalumbila, Zambia</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Taxation Officer</div>
+        <p class="exp-desc">Managed Income Tax, Transfer Pricing, WHT, import/export duties, and MRT. Prepared monthly EPTF reports to the Bank of Zambia. Reviewed HS code applications including SADC entries. Approved Asycuda World customs transactions and streamlined ZRA credibility audits.</p>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-left">
+        <div class="exp-period">10/2021 — 04/2023</div>
+        <div class="exp-company">Dangote Cement Zambia</div>
+        <div class="exp-location">Ndola, Zambia</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Tax Accountant</div>
+        <p class="exp-desc">Developed the Group Tax Policy Framework and minimised income tax exposure. Advised on double tax treaties, cross-border investments, and fiscal incentives. Ensured timely filing of PAYE, VAT, WHT, Excise Duty, Mineral Royalty, NAPSA, and NHIMA. Coordinated regulatory audits and provided management with impact analyses.</p>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-left">
+        <div class="exp-period">08/2018 — 09/2021</div>
+        <div class="exp-company">Zambia Revenue Authority</div>
+        <div class="exp-location">Lusaka, Zambia</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Asst. Tax Inspector — Audit</div>
+        <p class="exp-desc">Conducted comprehensive tax audits across all tax types with on-site evaluations. Interpreted and applied tax legislation, compiled audit reports, mentored junior auditors, and investigated fraud cases. Developed process improvement strategies within the audit function.</p>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-left">
+        <div class="exp-period">05/2015 — 11/2017</div>
+        <div class="exp-company">Zambia Revenue Authority</div>
+        <div class="exp-location">Katima Mulilo, Zambia</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Asst. Customs Officer</div>
+        <p class="exp-desc">Conducted physical inspections for valuation and classification using XRF machines. Managed customs import/export documentation, bonded warehouse inspections, and state warehouse inventory.</p>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-left">
+        <div class="exp-period">01/2013 — 06/2015</div>
+        <div class="exp-company">Zanaco</div>
+        <div class="exp-location">Mansa, Zambia</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Back-Office Teller</div>
+        <p class="exp-desc">Managed customer financial transactions, account reconciliations, and ATM GL accounts. Processed account openings, savings plans, and loan applications. Conducted regular transaction audits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ACHIEVEMENTS -->
+<section class="achievements-section" id="achievements">
+  <div style="padding-top:80px;">
+    <div class="exp-header">
+      <div><div class="section-eyebrow">Track Record</div><h2 class="section-heading">Key Achievements</h2></div>
+      <span class="exp-count">05 Highlights</span>
+    </div>
+    <div class="achieve-cards">
+      <div class="achieve-card">
+        <div class="achieve-card-num">100%</div>
+        <div class="achieve-card-title">WHT Assessment Reduction</div>
+        <p class="achieve-card-body">Negotiated a complete reduction of a K9 million Withholding Tax assessment for Dangote Cement Zambia through exceptional expertise in tax negotiation and compliance.</p>
+      </div>
+      <div class="achieve-card">
+        <div class="achieve-card-num">95%</div>
+        <div class="achieve-card-title">Customs Assessment Reduction</div>
+        <p class="achieve-card-body">Achieved a 95% reduction on a USD 19 million customs tax assessment for FQM Trident, showcasing deep expertise in customs compliance and strategic negotiation.</p>
+      </div>
+      <div class="achieve-card">
+        <div class="achieve-card-num">AEO</div>
+        <div class="achieve-card-title">Authorised Economic Operator</div>
+        <p class="achieve-card-body">Secured AEO designation for FQM Trident, optimising customs operations and materially reducing ongoing compliance costs.</p>
+      </div>
+      <div class="achieve-card">
+        <div class="achieve-card-num">70%+</div>
+        <div class="achieve-card-title">Clearance Time Reduction</div>
+        <p class="achieve-card-body">Facilitated KTDC's inclusion in the CACP programme, reducing customs clearance times by over 70% through streamlined processes.</p>
+      </div>
+      <div class="achieve-card">
+        <div class="achieve-card-num">◆</div>
+        <div class="achieve-card-title">Compliance Dashboard & WHT Fix</div>
+        <p class="achieve-card-body">Built an IT-integrated WHT reporting solution and a centralised tax obligations dashboard to improve cash flow and accelerate VAT refund processing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div style="padding-top:80px;">
+    <div class="exp-header">
+      <div><div class="section-eyebrow">Recommendations</div><h2 class="section-heading">What Others<br><em>Say.</em></h2></div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Marvin's deep knowledge of ZRA processes and his ability to negotiate complex tax assessments saved the company millions. His calm, methodical approach under pressure is exceptional."</p>
+        <div class="testimonial-rule"></div>
+        <div class="testimonial-name">Brian Mulendema</div>
+        <div class="testimonial-role">Collector — Zambia Revenue Authority</div>
+        <div class="testimonial-note">Reference available upon request · +260 977 449000</div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"A rare professional who combines technical tax expertise with genuine strategic thinking. Marvin consistently delivered beyond expectations and built a strong compliance culture across our teams."</p>
+        <div class="testimonial-rule"></div>
+        <div class="testimonial-name">Kaunda Salimu</div>
+        <div class="testimonial-role">Online Training Manager — Northrise University</div>
+        <div class="testimonial-note">Reference available upon request · +260 978 553461</div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Marvin brings integrity, precision, and a proactive mindset to everything he does. His financial acumen and attention to compliance made a real difference to our operations."</p>
+        <div class="testimonial-rule"></div>
+        <div class="testimonial-name">Vincent Sichilima</div>
+        <div class="testimonial-role">Branch Manager — Zanaco</div>
+        <div class="testimonial-note">Reference available upon request · +260 955 625080</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="section-eyebrow">Get In Touch</div>
+      <h2 class="contact-heading">Open to<br><em>Opportunities</em></h2>
+      <p class="contact-sub">Available for senior tax roles, consultancy engagements, and strategic advisory. Based in Lusaka — open to opportunities across Zambia and beyond.</p>
+      <div class="contact-links">
+        <a href="mailto:Bandamarvin1@gmail.com" class="cli">
+          <div><span class="cli-label">Email</span><span class="cli-value">Bandamarvin1@gmail.com</span></div>
+          <span class="cli-arrow">→</span>
+        </a>
+        <a href="tel:+260967199838" class="cli">
+          <div><span class="cli-label">Phone</span><span class="cli-value">+260 967 199 838</span></div>
+          <span class="cli-arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/marvin-banda-91728762" target="_blank" class="cli">
+          <div><span class="cli-label">LinkedIn</span><span class="cli-value">Marvin Banda</span></div>
+          <span class="cli-arrow">→</span>
+        </a>
+        <a href="Marvin_Banda_CV.pdf" download="Marvin_Banda_CV.pdf" class="cli">
+          <div><span class="cli-label">Curriculum Vitae</span><span class="cli-value">Download Full CV (PDF)</span></div>
+          <span class="cli-arrow">↓</span>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0.8;">Send a Message</div>
+      <div class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" placeholder="Full name" id="fname">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Organisation</label>
+            <input type="text" class="form-input" placeholder="Company / Institution" id="forg">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="your@email.com" id="femail">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <input type="text" class="form-input" placeholder="e.g. Senior Tax Manager Role" id="fsubject">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Tell me about the opportunity..." id="fmessage"></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit()">
+          Send Message
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <div class="form-success" id="formSuccess">✓ &nbsp; Message sent! Marvin will be in touch shortly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Marvin Banda — Tax Manager</p>
+  <div class="footer-badge">ZICA Member · A010307</div>
+  <p>Libala South, Lusaka, Zambia</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.exp-item, .achieve-card, .cert-card, .testimonial-card').forEach(el => obs.observe(el));
+
+  // Contact form handler
+  function handleSubmit() {
+    const name    = document.getElementById('fname').value.trim();
+    const email   = document.getElementById('femail').value.trim();
+    const subject = document.getElementById('fsubject').value.trim();
+    const message = document.getElementById('fmessage').value.trim();
+    if (!name || !email || !message) { alert('Please fill in your name, email, and message.'); return; }
+    // Build mailto link
+    const org  = document.getElementById('forg').value.trim();
+    const body = `From: ${name}${org ? ' (' + org + ')' : ''}\nEmail: ${email}\n\n${message}`;
+    window.location.href = `mailto:Bandamarvin1@gmail.com?subject=${encodeURIComponent(subject || 'Portfolio Enquiry')}&body=${encodeURIComponent(body)}`;
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>
