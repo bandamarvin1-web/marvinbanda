@@ -41,7 +41,6 @@
   .hero-right { position:relative; overflow:hidden; background:var(--navy-mid); display:flex; flex-direction:column; }
   .hero-right-pattern { position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(201,168,76,0.03) 40px,rgba(201,168,76,0.03) 41px),repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(201,168,76,0.03) 40px,rgba(201,168,76,0.03) 41px); }
 
-  /* Headshot area */
   .hero-headshot-wrap { position:relative; z-index:2; display:flex; justify-content:center; align-items:center; flex:1; padding:48px; }
   .hero-headshot-ring { width:280px; height:280px; border-radius:50%; border:2px solid var(--rule); display:flex; align-items:center; justify-content:center; position:relative; }
   .hero-headshot-ring::before { content:''; position:absolute; inset:-8px; border-radius:50%; border:1px solid rgba(201,168,76,0.1); }
@@ -192,7 +191,6 @@
   .form-textarea { height:100px; }
   .form-submit { padding:16px 40px; background:var(--gold); color:var(--navy); font-family:'Montserrat',sans-serif; font-size:10px; font-weight:600; letter-spacing:3px; text-transform:uppercase; border:none; cursor:pointer; transition:all 0.3s; align-self:flex-start; display:flex; align-items:center; gap:10px; }
   .form-submit:hover { background:var(--gold-light); transform:translateY(-2px); }
-  .form-success { display:none; padding:16px 24px; background:rgba(46,125,82,0.15); border:1px solid rgba(46,125,82,0.4); color:#4caf7d; font-size:12px; letter-spacing:1px; }
 
   /* Direct links */
   .contact-links { display:flex; flex-direction:column; gap:2px; }
@@ -340,7 +338,7 @@
 <div class="logos-section">
   <div class="logos-label">Trusted By</div>
   <div class="logos-strip">
-    <div class="logo-pill"><span class="logo-name">Zambian Breweries</span></div>
+    <div class="logo-pill"><img src="zb-logo.png" alt="Zambian Breweries" style="height:36px;object-fit:contain;opacity:0.6;filter:brightness(0) invert(1);transition:opacity 0.3s;"></div>
     <div class="logo-pill"><span class="logo-name">FQM Trident</span></div>
     <div class="logo-pill"><span class="logo-name">Dangote Cement</span></div>
     <div class="logo-pill"><span class="logo-name">Zambia Revenue Authority</span></div>
@@ -631,7 +629,10 @@
 
 <div class="gold-divider"></div>
 
-<!-- CONTACT -->
+<!-- ============================================================
+     CONTACT SECTION — Formspree form replaces old mailto form
+     IMPORTANT: Replace "xxxxxxxx" with your actual Formspree ID
+     ============================================================ -->
 <section class="contact-section" id="contact">
   <div class="contact-grid">
     <div>
@@ -657,38 +658,41 @@
         </a>
       </div>
     </div>
+
+    <!-- ✅ NEW FORMSPREE FORM — replaces the old div+button+JS form -->
     <div>
       <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;opacity:0.8;">Send a Message</div>
-      <div class="contact-form" id="contactForm">
+      <form class="contact-form" action="https://formspree.io/f/xxxxxxxx" method="POST">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Your Name</label>
-            <input type="text" class="form-input" placeholder="Full name" id="fname">
+            <input type="text" name="name" class="form-input" placeholder="Full name" required>
           </div>
           <div class="form-group">
             <label class="form-label">Organisation</label>
-            <input type="text" class="form-input" placeholder="Company / Institution" id="forg">
+            <input type="text" name="organisation" class="form-input" placeholder="Company / Institution">
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" placeholder="your@email.com" id="femail">
+          <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
         </div>
         <div class="form-group">
           <label class="form-label">Subject</label>
-          <input type="text" class="form-input" placeholder="e.g. Senior Tax Manager Role" id="fsubject">
+          <input type="text" name="subject" class="form-input" placeholder="e.g. Senior Tax Manager Role">
         </div>
         <div class="form-group">
           <label class="form-label">Message</label>
-          <textarea class="form-textarea" placeholder="Tell me about the opportunity..." id="fmessage"></textarea>
+          <textarea name="message" class="form-textarea" placeholder="Tell me about the opportunity..." required></textarea>
         </div>
-        <button class="form-submit" onclick="handleSubmit()">
+        <button type="submit" class="form-submit">
           Send Message
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
-        <div class="form-success" id="formSuccess">✓ &nbsp; Message sent! Marvin will be in touch shortly.</div>
-      </div>
+      </form>
     </div>
+    <!-- ✅ END NEW FORM -->
+
   </div>
 </section>
 
@@ -704,20 +708,6 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
   document.querySelectorAll('.exp-item, .achieve-card, .cert-card, .testimonial-card').forEach(el => obs.observe(el));
-
-  // Contact form handler
-  function handleSubmit() {
-    const name    = document.getElementById('fname').value.trim();
-    const email   = document.getElementById('femail').value.trim();
-    const subject = document.getElementById('fsubject').value.trim();
-    const message = document.getElementById('fmessage').value.trim();
-    if (!name || !email || !message) { alert('Please fill in your name, email, and message.'); return; }
-    // Build mailto link
-    const org  = document.getElementById('forg').value.trim();
-    const body = `From: ${name}${org ? ' (' + org + ')' : ''}\nEmail: ${email}\n\n${message}`;
-    window.location.href = `mailto:Bandamarvin1@gmail.com?subject=${encodeURIComponent(subject || 'Portfolio Enquiry')}&body=${encodeURIComponent(body)}`;
-    document.getElementById('formSuccess').style.display = 'block';
-  }
 </script>
 </body>
 </html>
